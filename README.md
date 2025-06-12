@@ -36,8 +36,7 @@ This project was developed as part of my Individual Project module (45 credits).
 1. Clone the repo and navigate to the project folder:
 
    ```bash
-   git clone <repo-url>
-   cd <project-folder>
+   git clone https://github.com/riad-mammadov/Serve2U-Cloud-Based-Application
    npm install
    composer install
    
