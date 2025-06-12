@@ -1,112 +1,99 @@
 # Serve2U
-## A cloud based web application targetted at football fans who prefer the convenience and concept of ordering concession items directly to their seats, allowing them to pay via Stripe's API and recieve their orders without having to deal with the half-time/pre-game rush that is so commonly seen during matches.
 
-This application was developed as part of my Individual Project module worth 45 Credits.
+**Serve2U** is a cloud-based web application designed for football fans to order concession items directly to their seats. Users can pay securely via Stripe and avoid the halftime and pre-game rush at stadiums.
 
-### Note: This project was created prior to any proficient knowledge in Node.js / React.js and was my first time attempting a fullstack application along with cloud intergration.
+This project was developed as part of my Individual Project module (45 credits).
 
--------------------------
+> **Note:** This was my first fullstack app with cloud integration, built before gaining proficiency in Node.js and React.js.
 
-## PROJECT SET UP GUIDE 
+---
 
-Pre Requisites - Node.js, PHP, MySQL, Composer
+## Project Setup Guide
 
-## Folder Structure -
+### Prerequisites
+- Node.js  
+- PHP  
+- MySQL  
+- Composer  
 
-The src folder holds all of my relevant folders for my code including my servers
+---
 
-The public folder is what is served by my express server - all Javascript is left in the public folder along with the index.html
-as the index html is served from the root of the public folder, the rest are in its respective folders.
+### Folder Structure
 
-HTML contains all my html, CSS contains all my css and the backend folder contains all my PHP files. In this PHP file you will find a DBConnection which you would adjust to your SQL connection.
+- `src/` — Source code including servers  
+- `public/` — Served by Express; contains `index.html`, JS, and assets  
+  - `HTML/` — HTML files  
+  - `CSS/` — CSS files  
+  - `backend/` — PHP files (includes database connection config)  
+- `services/` — AWS Cognito service files for auth  
+- `middleware/` — Authentication middleware  
+- `controllers/` — Backend controllers  
 
-Services contain the Cognito.services folder which communicates with cognito to sign up / log in / change password etc..
-
-Middleware contains the middleware for the authentication
-
-Controllers contain all the controllers
-
-## AI and Code reuse -
-
-In this project, AI and online code (ie from stackOverflow) was used only to help structure code and debug errors. For cases that i did not know how to do something, i would use these only as a guide and help me (AI was used for some of the design however as it saved a lot of time, it gave me a base to work off allowing me to move on swiftly onto more important aspects of my project). Code reuse - Tutorials and github repos have been used to help format the page and they have been referenced at the top of the files where relevant.
-
-
+---
 
 ## Installation
----------------------------------
-1) Import the code file to your machine and navigate to the project directory
-2) Install the required Node.js dependencies by running npm install, ensuring all dependencies are the same version as listed in the package.json
 
+1. Clone the repo and navigate to the project folder:
 
-Installing Composer 
-1) Upon downloading composer globally (The link is provided above), navigate to the root of the project directory and install the dependencies 
-specified in the composer.json by running 'composer install' in the terminal. This is needed so that PHP can interact with Stripe.
-
-
-Database Set Up
-1) Create a new MySQL database to use with the application by running
+   ```bash
+   git clone <repo-url>
+   cd <project-folder>
+   npm install
+   composer install
+   
+## Database Setup
 
 CREATE DATABASE Serve2U;
 USE Serve2U;
+Import serve2udatabase.sql from the project root.
 
-Ensuring that the database is running on the port 3306.
+Update database config:
 
-2) Import the provided SQL file to populate the database with neccessary tables/initial data, the SQL file is called serve2udatabase.sql which includes all my tables (Some data from testing may still be left behind) and along with necessary data such as products at the root of my project directory. It is also imported with a CREATE schema. You can add this by importing the file via MySQL Workbench.
-
-3) In the auth.controller.ts (src > controllers > auth.controller.ts), update the database connection config to match your MySQL settings
-
-The section will look like this - 
+In src/controllers/auth.controller.ts:
 const pool = createPool({
     host: 'localhost',
     user: 'your_sql_user',
-    password: "your_sql_password",
-    database: "Serve2U",
+    password: 'your_sql_password',
+    database: 'Serve2U',
     port: 3306
 });
 
-
-
-PHP Set Up
-1) Ensure the PHP database connection settings are also correct matching your MySQL settings (src > public > backend > dbconnection.php)
-
-The section will look like this 
+In public/backend/dbconnection.php:
 $localhost = "localhost:3306";
 $db = "Serve2U";
-$user = "your_sql_user"; 
-$pwd = "your_sql_password"; 
+$user = "your_sql_user";
+$pwd = "your_sql_password";
 
-Make sure that the $localhost includes the port 3306 
+## Start both Node and PHP servers concurrently:
 
+npm run dev
+Express server runs on http://localhost:3000
+PHP server runs on http://localhost:8080
+Ensure MySQL is running on port 3306.
 
-Running the Application 
-1) Start the servers using the npm script that was configured to concurrently run Node.js express server and the PHP server
+## Usage:
 
-'npm run dev' 
+Open http://localhost:3000 in your browser.
+Sign up with a valid email (verification code sent via AWS SES).
 
-This command should start:
-An express server running on the port 3000 
-A PHP server running on the port 8080 
+## Staff Login:
 
-Please ensure that MySQL is running on the port 3306.
-
-2) Once the script runs the servers, navigate to http://localhost:3000 which should take you to the index html page.
-
-Using the Application
-1) Use the application as you would, create an account using an Email that is accessible as a verification code will be sent to that email via SES which must be submitted into the form. The forgot password works the same way as it sends an email to the email that is associated to the username 
-2) When attempting to log in with staff login, use this account as the account must be preconfigured in the Cognito user pool to be in the 'staff' group in order to access the Staff Dashboard.
-
+Use the preconfigured staff account to access the Staff Dashboard:
 Username: Test0033
 Password: Password123@
 
-This account is registered as a staff in my user pool so that the staff dashboard can be accessible for my marker, any other account wont be able to log into the staff dashboard, including the one that you created to sign up.
+## Stripe Demo Payments:
 
-The account that you create to sign up can only log in as a user to purchase items.
+Card Number: 4242 4242 4242 4242
+Expiry: Any future date
+CVV: Any 3 digits
+After placing orders, staff can manage them via the dashboard.
 
-3) In order to check out with Stripes payment service (Developers mode)
-For the Card Number insert: 4242 4242 4242 4242
-For the expiry date insert any date set in the future
-The CVV can be any 3 digit number.
+## To add menu items (staff):
 
-4) Upon making an order, you can open a new tab and log out, and use the staff log in provided to access the staff dashboard (For ease sake so you have access to both user and staff UIs and see how they interact with one another)
+Upload valid file types as per PHP validation.
+Enter prices in pence (e.g., £14.50 = 1450).
+Refresh the user’s cart page to see new items.
 
-5) When adding an item to the menu, ensure that it is a valid file type specified in the add item php and insert the price of the items in pence (as it is stored as an integer in my database) so an item for £14.50 will be inserted as 1450. After it successfully adds the item to the menu, refresh the Cart.html (on the users side) in order to see the new item on the menu.
+**Note**-
+Early project with learning-focused implementation.
